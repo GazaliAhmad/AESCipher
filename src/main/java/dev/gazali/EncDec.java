@@ -1,7 +1,9 @@
 package dev.gazali;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
 import java.util.Scanner;
 import static java.lang.System.*;
 import static java.util.Base64.*;
@@ -10,11 +12,12 @@ import static javax.crypto.Cipher.getInstance;
 class EncDec {
 	
 	private final Scanner scanner;
-	private final String key = "TheQuickBrownFoxTheQuickBrownFox";
-	private static byte[] IV = new byte[16];
+	private static final String key = "TheQuickBrownFoxTheQuickBrownFox";
+	private static final byte[] IV = new byte[16];
 	
 	EncDec() {
 		scanner = new Scanner(System.in);
+		generateIV();
 		getChoice();
 	}
 	
@@ -36,35 +39,36 @@ class EncDec {
 		}
 	}
 	
-	private void decrypt() {
-		out.print("\nEnter message to decrypt:\n");
-		var msgToDecrypt = scanner.nextLine();
-		
-		try {
-			SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
-			Cipher cipher = getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new javax.crypto.spec.IvParameterSpec(IV));
-			byte[] decryptedData = cipher.doFinal(getDecoder().decode(msgToDecrypt));
-			err.println("\nDecrypted Message: " + new String(decryptedData));
-			out.println("\nEncrypted Key: " + getEncoder().encodeToString(key.getBytes()));
-			out.println("Encrypted IV : " + getEncoder().encodeToString(IV));
-		} catch (Exception e) {
-			err.println("Error while decrypting: " + e);
-			err.println("Please try again. (d, e, q)");
-		}
+	private void generateIV() {
+		SecureRandom secureRandom = new SecureRandom();
+		secureRandom.nextBytes(IV);
 	}
 	
 	private void encrypt() {
 		out.print("\nEnter message to encrypt:\n");
-		var msgToEncrypt = scanner.nextLine();
-		
+		var message = scanner.nextLine();
+		getCipher(Cipher.ENCRYPT_MODE, message);
+	}
+	
+	private void decrypt() {
+		out.print("\nEnter message to decrypt:\n");
+		var message = scanner.nextLine();
+		getCipher(Cipher.DECRYPT_MODE, message);
+	}
+	
+	private void getCipher(int mode, String message) {
 		try {
-			SecretKeySpec secretkeySpec = new SecretKeySpec(key.getBytes(), "AES");
+			SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
 			Cipher cipher = getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, secretkeySpec);
-			IV = cipher.getIV();
-			String encryptedData = getEncoder().encodeToString(cipher.doFinal(msgToEncrypt.getBytes()));
-			err.println("\nEncrypted Message: " + encryptedData);
+			cipher.init(mode, secretKeySpec, new IvParameterSpec(IV));
+			byte[] data;
+			if (mode == Cipher.ENCRYPT_MODE) {
+				data = cipher.doFinal(message.getBytes());
+				err.println("\nEncrypted Message: " + getEncoder().encodeToString(data));
+			} else {
+				data = cipher.doFinal(getDecoder().decode(message));
+				err.println("\nDecrypted Message: " + new String(data));
+			}
 			out.println("\nEncrypted Key: " + getEncoder().encodeToString(key.getBytes()));
 			out.println("Encrypted IV : " + getEncoder().encodeToString(IV));
 		} catch (Exception e) {
