@@ -6,6 +6,7 @@ import java.util.Scanner;
 import static java.lang.System.*;
 import static java.util.Base64.*;
 import static javax.crypto.Cipher.getInstance;
+
 class EncDec {
 	
 	private final Scanner scanner;
@@ -38,13 +39,12 @@ class EncDec {
 	private void decrypt() {
 		out.print("\nEnter message to decrypt:\n");
 		var msgToDecrypt = scanner.nextLine();
-		byte[] decryptedData;
 		
 		try {
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), "AES");
 			Cipher cipher = getInstance("AES/CBC/PKCS5Padding");
 			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new javax.crypto.spec.IvParameterSpec(IV));
-			decryptedData = cipher.doFinal(getDecoder().decode(msgToDecrypt));
+			byte[] decryptedData = cipher.doFinal(getDecoder().decode(msgToDecrypt));
 			err.println("\nDecrypted Message: " + new String(decryptedData));
 			out.println("\nEncrypted Key: " + getEncoder().encodeToString(key.getBytes()));
 			out.println("Encrypted IV : " + getEncoder().encodeToString(IV));
