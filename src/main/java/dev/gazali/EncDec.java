@@ -9,9 +9,9 @@ import static javax.crypto.Cipher.getInstance;
 class EncDec {
 	
 	private final Scanner scanner;
-	//private final String key = "TheQuickBrownFoxTheQuickBrownFox";
-	private final String key = "abcdefghijklmnop1234567890ABCDEF";
-	byte[] IV;
+	private final String key = "TheQuickBrownFoxTheQuickBrownFox";
+	private static byte[] IV = new byte[16];
+	
 	EncDec() {
 		scanner = new Scanner(System.in);
 		getChoice();
