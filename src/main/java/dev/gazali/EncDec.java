@@ -17,11 +17,10 @@ class EncDec {
 	
 	EncDec() {
 		scanner = new Scanner(System.in);
-		generateIV();
+		new SecureRandom().nextBytes(IV);
 		getChoice();
 	}
 	
-	@SuppressWarnings("InfiniteLoopStatement")
 	private void getChoice() {
 		try {
 			while (true) {
@@ -30,18 +29,16 @@ class EncDec {
 				switch (response) {
 					case 'e' -> encrypt();
 					case 'd' -> decrypt();
-					case 'q' -> quit();
+					case 'q' -> {
+						out.println("Goodbye!");
+						exit(0);
+					}
 					default -> out.println("Invalid choice.");
 				}
 			}
 		} catch (Exception e) {
 			err.println("Error: " + e);
 		}
-	}
-	
-	private void generateIV() {
-		SecureRandom secureRandom = new SecureRandom();
-		secureRandom.nextBytes(IV);
 	}
 	
 	private void encrypt() {
@@ -75,10 +72,5 @@ class EncDec {
 			err.println("Error while encrypting: " + e);
 			err.println("Please try again. (d, e, q)");
 		}
-	}
-	
-	private void quit() {
-		out.println("\nGoodbye!");
-		exit(0);
 	}
 }
