@@ -66,8 +66,10 @@ class EncDec {
 				data = cipher.doFinal(getDecoder().decode(message));
 				err.println("\nDecrypted Message: " + new String(data));
 			}
-			out.println("\nEncrypted Key: " + getEncoder().encodeToString(key.getBytes()));
-			out.println("Encrypted IV : " + getEncoder().encodeToString(IV));
+			err.println((mode == Cipher.ENCRYPT_MODE ? "\nEncryption" : "\nDecryption") +
+					" Key: " + getEncoder().encodeToString(secretKeySpec.getEncoded()));
+			err.println((mode == Cipher.ENCRYPT_MODE ? "Encryption" : "Decryption") +
+					" IV : " + getEncoder().encodeToString(IV));
 		} catch (Exception e) {
 			err.println("Error while encrypting: " + e);
 			err.println("Please try again. (d, e, q)");
