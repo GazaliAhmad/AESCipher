@@ -9,13 +9,13 @@ import static java.lang.System.*;
 import static java.util.Base64.*;
 import static javax.crypto.Cipher.getInstance;
 
-class EncDec {
+class cipher {
 	
 	private final Scanner scanner;
-	private static final String key = "TheQuickBrownFoxTheQuickBrownFox";
+	private static final String key = "abcdefghijklmnopqrstuvwxyz123456";
 	private static final byte[] IV = new byte[16];
 	
-	EncDec() {
+	cipher() {
 		scanner = new Scanner(System.in);
 		new SecureRandom().nextBytes(IV);
 		getChoice();
