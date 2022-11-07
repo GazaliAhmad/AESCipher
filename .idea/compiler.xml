@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AESCipher" options="--add-exports java.base/jdk.internal.jimage.decompressor=ALL-UNNAMED" />
+      <module name="AESCipher" options="" />
     </option>
   </component>
 </project>
